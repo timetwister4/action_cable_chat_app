@@ -1,10 +1,12 @@
-// app/assets/javascripts/cable.js
-//= require action_cable
-//= require_self
-//= require_tree ./channels
+App.room = App.cable.subscriptions.create "RoomChannel",
+  connected: ->
+    # Called when the subscription is ready for use on the server
 
-(function() {
-  this.App || (this.App = {});
+  disconnected: ->
+    # Called when the subscription has been terminated by the server
 
-  App.cable = ActionCable.createConsumer("ws://cable.example.com");
-}).call(this);
+  received: (data) ->
+    unless data.content.blank?
+      $('#messages-table').append '<div class="message">' +
+        '<div class="message-user">' + data.username + ":" + '</div>' +
+        '<div class="message-content">' + data.content + '</div>' + '</div>'
